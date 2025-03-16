@@ -20,7 +20,7 @@ This is a **Next.js** web application developed as part of the **NTU SC2006** co
 - **Tailwind CSS** (Styling)
 - **Node.js** (Backend API)
 - **MongoDB** (Database for data storage)
-- **SG DATA.GOV NEA API** (Environmental data sources)
+- **DATA.GOV.SG NEA API** (Environmental data sources)
 
 ## Getting Started
 
@@ -53,16 +53,6 @@ Ensure you have the following installed:
    npm run dev  # or yarn dev
    ```
 2. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
-
-## Deployment
-
-To deploy the application, you can use **Vercel**:
-
-```bash
-vercel deploy
-```
-
-Alternatively, you can deploy using **Netlify** or **Docker** based on your requirements.
 
 ## Contributors
 
