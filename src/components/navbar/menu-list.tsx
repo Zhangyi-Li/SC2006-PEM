@@ -42,11 +42,5 @@ export function getMenuList(pathname: string): Menu[] {
       active: pathname === "/map",
       icon: MapPin,
     },
-    {
-      href: "/setting",
-      label: "Setting",
-      active: pathname.includes("/setting"),
-      icon: Settings,
-    },
   ];
 }

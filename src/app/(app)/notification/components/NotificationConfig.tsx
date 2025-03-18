@@ -1,32 +1,46 @@
 /** @format */
 import React, { useState } from "react";
 import { Switch } from "@/components/ui/switch";
+import NotificationDialog from "./NotificationDialog";
+
+type Notification = {
+  time: string;
+  park: string;
+  date: string[];
+  enabled: boolean;
+};
 
 const NotificationConfig = () => {
-  const [notifications, setNotifications] = useState([
+  const [notifications, setNotifications] = useState<Notification[]>([
     {
       time: "08:00 AM",
-      label: "Pasir Ris Park",
-      date: "Mon, Wed, and Fri",
+      park: "Pasir Ris Park",
+      date: ["Mon", "Wed", "Fri"],
       enabled: false,
     },
-    { time: "08:30 AM", label: "Pasir Ris Park", date: "Mon", enabled: true },
+    { time: "08:30 AM", park: "Pasir Ris Park", date: ["Mon"], enabled: true },
   ]);
+
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
 
   const toggleSwitch = (index: number) => {
     const newNotifications = [...notifications];
     newNotifications[index].enabled = !newNotifications[index].enabled;
-    console.log(newNotifications);
-    console.log(index);
     setNotifications(newNotifications);
   };
 
-  //   const addNotification = () => {
-  //     setNotifications([
-  //       ...notifications,
-  //       { time: "09:00 AM", label: "New Notification", enabled: false },
-  //     ]);
-  //   };
+  const openDialog = (notification: Notification) => {
+    setSelectedNotification(notification);
+  };
+
+  const closeDialog = () => {
+    setSelectedNotification(null);
+  };
+
+  const displayDate = (date: string[]) => {
+    return date.join(", ");
+  };
 
   return (
     <div>
@@ -39,11 +53,12 @@ const NotificationConfig = () => {
               justifyContent: "space-between",
               padding: "10px",
             }}
+            onClick={() => openDialog(notification)}
           >
             <div>
               <h2>{notification.time}</h2>
               <p>
-                {notification.label}, {notification.date}
+                {notification.park}, {displayDate(notification.date)}
               </p>
             </div>
             <Switch
@@ -54,7 +69,13 @@ const NotificationConfig = () => {
           <hr />
         </div>
       ))}
-      {/* <button onClick={addNotification}>Add Notification</button> */}
+      {selectedNotification && (
+        <NotificationDialog
+          notification={selectedNotification}
+          onClose={closeDialog}
+          isOpen={selectedNotification ? true : false}
+        />
+      )}
     </div>
   );
 };
