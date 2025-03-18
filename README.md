@@ -35,13 +35,9 @@ Ensure you have the following installed:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-repo/sg-park-monitoring.git
+   git clone https://github.com/Zhangyi-Li/SC2006-PEM.git
    ```
-2. Navigate to the project directory:
-   ```bash
-   cd sg-park-monitoring
-   ```
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    npm install  # or yarn install
    ```
