@@ -10,9 +10,9 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
 import { cn } from "@/lib/utils";
-import { Plus, CircleX, GripVertical } from "lucide-react";
+import { Plus, GripVertical } from "lucide-react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddParkDialog from "./AddParkDialog";
 
 // Define the item interface
@@ -37,10 +37,14 @@ interface Item {
 export const DragDrop = () => {
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null); // Track the ID of the active item being dragged
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
-  const [items, setItems] = useState<Item[]>([
-    { name: "Jurong Lake Garden", id: 1 },
-    { name: "Paris Ris Park", id: 2 },
-  ]);
+  const [items, setItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    setItems([
+      { name: "Jurong Lake Garden", id: 1 },
+      { name: "Paris Ris Park", id: 2 },
+    ]);
+  }, []);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;

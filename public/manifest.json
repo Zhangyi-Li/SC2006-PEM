@@ -1,0 +1,8 @@
+{
+  "name": "SG Park Environmental Monitoring System",
+  "short_name": "PEM",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}

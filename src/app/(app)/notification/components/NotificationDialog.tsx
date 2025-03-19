@@ -57,7 +57,7 @@ const LocalTimePicker: React.FC<{
         type="time"
         id="time"
         aria-label="Choose time"
-        className="w-full"
+        className="focus-visible:outline-none focus-visible:ring-0 min-w-full"
         value={time}
         onChange={(e) => onChange(e.target.value)}
       />

@@ -19,71 +19,7 @@ interface ConfigItem {
 }
 
 const configData = {
-  UVI: [
-    {
-      label: "Low ( 0 - 2 )",
-      color: "text-green-500",
-      defaultValue: 0,
-      userValue: 0,
-    },
-    {
-      label: "Moderate ( 3 - 5 )",
-      color: "text-yellow-500",
-      defaultValue: -0.5,
-      userValue: -0.5,
-    },
-    {
-      label: "High ( 3 - 5 )",
-      color: "text-orange-500",
-      defaultValue: -2,
-      userValue: -2,
-    },
-    {
-      label: "Very High ( 3 - 5 )",
-      color: "text-red-500",
-      defaultValue: -2,
-      userValue: -2,
-    },
-    {
-      label: "Extreme ( 11 - ∞ )",
-      color: "text-purple-500",
-      defaultValue: -5,
-      userValue: -5,
-    },
-  ],
-  PSI: [
-    {
-      label: "Good ( 0 - 50 )",
-      color: "text-green-500",
-      defaultValue: 0,
-      userValue: 0,
-    },
-    {
-      label: "Moderate ( 51 - 100 )",
-      color: "text-blue-500",
-      defaultValue: -0.5,
-      userValue: -0.5,
-    },
-    {
-      label: "Unhealthy ( 101 - 200 )",
-      color: "text-yellow-500",
-      defaultValue: -2,
-      userValue: -2,
-    },
-    {
-      label: "Very unhealthy ( 201 - 300 )",
-      color: "text-orange-500",
-      defaultValue: -3,
-      userValue: -3,
-    },
-    {
-      label: "Hazardous ( Above 300 )",
-      color: "text-red-500",
-      defaultValue: -5,
-      userValue: -5,
-    },
-  ],
-  weather: [
+  "WEATHER FORECAST": [
     { label: "Fair", color: "text-green-500", defaultValue: 0, userValue: 0 },
     {
       label: "Fair (Day)",
@@ -218,6 +154,70 @@ const configData = {
       userValue: -5,
     },
   ],
+  PSI: [
+    {
+      label: "Good ( 0 - 50 )",
+      color: "text-green-500",
+      defaultValue: 0,
+      userValue: 0,
+    },
+    {
+      label: "Moderate ( 51 - 100 )",
+      color: "text-blue-500",
+      defaultValue: -0.5,
+      userValue: -0.5,
+    },
+    {
+      label: "Unhealthy ( 101 - 200 )",
+      color: "text-yellow-500",
+      defaultValue: -2,
+      userValue: -2,
+    },
+    {
+      label: "Very unhealthy ( 201 - 300 )",
+      color: "text-orange-500",
+      defaultValue: -3,
+      userValue: -3,
+    },
+    {
+      label: "Hazardous ( Above 300 )",
+      color: "text-red-500",
+      defaultValue: -5,
+      userValue: -5,
+    },
+  ],
+  UVI: [
+    {
+      label: "Low ( 0 - 2 )",
+      color: "text-green-500",
+      defaultValue: 0,
+      userValue: 0,
+    },
+    {
+      label: "Moderate ( 3 - 5 )",
+      color: "text-yellow-500",
+      defaultValue: -0.5,
+      userValue: -0.5,
+    },
+    {
+      label: "High ( 3 - 5 )",
+      color: "text-orange-500",
+      defaultValue: -2,
+      userValue: -2,
+    },
+    {
+      label: "Very High ( 3 - 5 )",
+      color: "text-red-500",
+      defaultValue: -2,
+      userValue: -2,
+    },
+    {
+      label: "Extreme ( 11 - ∞ )",
+      color: "text-purple-500",
+      defaultValue: -5,
+      userValue: -5,
+    },
+  ],
 };
 
 export const RatingConfig: React.FC = () => {
@@ -236,7 +236,9 @@ export const RatingConfig: React.FC = () => {
         {Object.keys(userConfigData).map((key) => (
           <div key={key}>
             <AccordionItem value={key} className="p-4">
-              <AccordionTrigger>{key}</AccordionTrigger>
+              <AccordionTrigger>
+                <p className="font-semibold">{key}</p>
+              </AccordionTrigger>
               <AccordionContent className="bg-zinc-100 p-4 rounded-2xl">
                 {userConfigData[key as keyof typeof configData].map(
                   (item, index) => (
