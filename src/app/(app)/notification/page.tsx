@@ -8,9 +8,8 @@ const page = () => {
   return (
     <>
       <div>
-        <h1>Notification Schedule</h1>
-      </div>{" "}
-      <NotificationConfig />
+        <NotificationConfig />
+      </div>
     </>
   );
 };

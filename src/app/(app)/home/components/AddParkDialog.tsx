@@ -43,25 +43,10 @@ const AddParkDialog: React.FC<AddParkDialogProps> = ({
     }));
   };
 
-  const handleAddParks = () => {
-    const parksToAdd = Object.keys(selectedParks).filter(
-      (park) => selectedParks[park]
-    );
-    parksToAdd.forEach((park) => {
-      const region = Object.keys(parksByRegion).find((region) =>
-        parksByRegion[region].includes(park)
-      );
-      if (region) {
-        onAddPark({ name: park, region });
-      }
-    });
-    onClose();
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto p-4 pt-32 pb-24">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-auto p-4 py-24">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Select Parks to View Rating</h2>
@@ -86,12 +71,6 @@ const AddParkDialog: React.FC<AddParkDialogProps> = ({
             ))}
           </div>
         ))}
-        <button
-          onClick={handleAddParks}
-          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          Add Selected Parks
-        </button>
       </div>
     </div>
   );

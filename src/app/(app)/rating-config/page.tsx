@@ -1,12 +1,15 @@
 /** @format */
+"use client";
+
+import React, { useState } from "react";
+import { RatingConfig } from "./components/RatingConfig";
 
 const page = () => {
   return (
     <>
       <div>
-        <h1>Home</h1>
-        <p>Welcome to the rating config page!</p>
-      </div>{" "}
+        <RatingConfig />
+      </div>
     </>
   );
 };

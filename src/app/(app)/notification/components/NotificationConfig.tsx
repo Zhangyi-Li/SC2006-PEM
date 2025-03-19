@@ -13,12 +13,12 @@ type Notification = {
 const NotificationConfig = () => {
   const [notifications, setNotifications] = useState<Notification[]>([
     {
-      time: "08:00 AM",
+      time: "08:00",
       park: "Pasir Ris Park",
       date: ["Mon", "Wed", "Fri"],
       enabled: false,
     },
-    { time: "08:30 AM", park: "Pasir Ris Park", date: ["Mon"], enabled: true },
+    { time: "18:30", park: "Pasir Ris Park", date: ["Mon"], enabled: true },
   ]);
 
   const [selectedNotification, setSelectedNotification] =
@@ -53,12 +53,13 @@ const NotificationConfig = () => {
               justifyContent: "space-between",
               padding: "10px",
             }}
-            onClick={() => openDialog(notification)}
           >
-            <div>
-              <h2>{notification.time}</h2>
+            <div onClick={() => openDialog(notification)} className="w-full">
+              <p className="text-4xl font-semibold">{notification.time}</p>
               <p>
-                {notification.park}, {displayDate(notification.date)}
+                {notification.park}
+                {notification.date.length > 0 ? "," : ""}{" "}
+                {displayDate(notification.date)}
               </p>
             </div>
             <Switch

@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 type Notification = {
   time: string;
@@ -46,45 +47,20 @@ const parksByRegion: { [key: string]: string[] } = {
   West: ["West Coast Park", "Jurong Lake Gardens", "Bukit Batok Nature Park"],
 };
 
-const TimePicker: React.FC<{
+const LocalTimePicker: React.FC<{
   time: string;
   onChange: (time: string) => void;
 }> = ({ time, onChange }) => {
-  const [hours, setHours] = useState(parseInt(time.split(":")[0]));
-  const [minutes, setMinutes] = useState(parseInt(time.split(":")[1]));
-
-  const handleHoursChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setHours(parseInt(e.target.value));
-    onChange(
-      `${e.target.value.padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}`
-    );
-  };
-
-  const handleMinutesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMinutes(parseInt(e.target.value));
-    onChange(
-      `${hours.toString().padStart(2, "0")}:${e.target.value.padStart(2, "0")}`
-    );
-  };
-
   return (
-    <div className="flex space-x-2">
-      <select value={hours} onChange={handleHoursChange} className="">
-        {Array.from({ length: 24 }, (_, i) => (
-          <option key={i} value={i}>
-            {i.toString().padStart(2, "0")}
-          </option>
-        ))}
-      </select>
-      <select value={minutes} onChange={handleMinutesChange} className="">
-        {Array.from({ length: 60 }, (_, i) => (
-          <option key={i} value={i}>
-            {i.toString().padStart(2, "0")}
-          </option>
-        ))}
-      </select>
+    <div className="flex justify-center space-x-2">
+      <Input
+        type="time"
+        id="time"
+        aria-label="Choose time"
+        className="w-full"
+        value={time}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 };
@@ -111,26 +87,14 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">
           <div className="flex justify-between items-center p-4">
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              className="text-yellow-500 focus:outline-none"
-            >
-              Cancel
-            </Button>
-            <DialogTitle className="text-center">Add Alarm</DialogTitle>
-            <Button
-              variant="ghost"
-              onClick={onClose}
-              className="text-yellow-500 focus:outline-none"
-            >
-              Save
-            </Button>
+            <DialogTitle className="text-center">
+              {notification ? "Edit" : "Add"} Notification
+            </DialogTitle>
           </div>
-          <div className="grid gap-4 py-4 px-4">
+          <div className="grid gap-4 py-2 px-4">
             <div>
               <label className="block text-gray-400">Time</label>
-              <TimePicker time={time} onChange={setTime} />
+              <LocalTimePicker time={time} onChange={setTime} />
             </div>
             <div>
               <label className="block text-gray-400">Repeat every</label>
@@ -142,7 +106,7 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
                       onClick={() => toggleDay(day)}
                       className={`w-6 h-6 rounded-full border text-sm ${
                         selectedDays.includes(day)
-                          ? "bg-gray-500 text-white"
+                          ? "bg-zinc-500 text-white"
                           : "bg-transparent text-gray-400"
                       }`}
                     >
@@ -154,7 +118,7 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
                   onClick={() => setSelectedDays([])}
                   className={`px-2 h-6 rounded-full border text-sm ${
                     selectedDays.length === 0
-                      ? "bg-gray-500 text-white"
+                      ? "bg-zinc-500 text-white"
                       : "bg-transparent text-gray-400"
                   }`}
                 >
@@ -164,9 +128,8 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
             </div>
             <div>
               <label className="block text-gray-400">Park</label>
-
               <Select value={selectedPark} onValueChange={setSelectedPark}>
-                <SelectTrigger className="w-[280px] bg-white">
+                <SelectTrigger className="w-full bg-white">
                   <SelectValue placeholder="Select a park" />
                 </SelectTrigger>
                 <SelectContent className="bg-white overflow-y-auto max-h-[400px]">
@@ -183,8 +146,13 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
                 </SelectContent>
               </Select>
             </div>
+
+            <Button onClick={onClose} variant="outline" className="mt-4">
+              Save
+            </Button>
           </div>
         </DialogContent>
+        <DialogFooter></DialogFooter>
       </Dialog>
     </div>
   );

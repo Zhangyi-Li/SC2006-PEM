@@ -9,7 +9,7 @@ export default function DemoLayout({
 }) {
   return (
     <>
-      <div className="p-4">{children}</div>
+      <div className="mb-24">{children}</div>
       <NavBar />
     </>
   );
