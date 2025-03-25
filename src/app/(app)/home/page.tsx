@@ -1,11 +1,11 @@
 /** @format */
 
-import { DragDrop } from "./components/DragDrop";
+import { Display } from "./components/Display";
 
 const page = () => {
   return (
     <>
-      <DragDrop />
+      <Display />
     </>
   );
 };

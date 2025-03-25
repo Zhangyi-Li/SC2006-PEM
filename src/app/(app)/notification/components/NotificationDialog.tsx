@@ -21,6 +21,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { ParkData } from "@/lib/parks";
+
+type ParkObj = {
+  [key: string]: {
+    coordinate: [number, number];
+    region: string;
+    area: string;
+  };
+};
 
 type Notification = {
   time: string;
@@ -35,17 +44,26 @@ type NotificationDialogProps = {
   isOpen: boolean;
 };
 
-const parksByRegion: { [key: string]: string[] } = {
-  Central: [
-    "Singapore Botanic Gardens",
-    "Fort Canning Park",
-    "MacRitchie Reservoir Park",
-  ],
-  North: ["Admiralty Park", "Sembawang Park", "Lower Seletar Reservoir Park"],
-  South: ["Mount Faber Park", "Labrador Nature Reserve", "Kent Ridge Park"],
-  East: ["East Coast Park", "Pasir Ris Park", "Bedok Reservoir Park"],
-  West: ["West Coast Park", "Jurong Lake Gardens", "Bukit Batok Nature Park"],
-};
+const parksByRegion: { [key: string]: string[] } = getParksByRegion(ParkData);
+
+function getParksByRegion(parkObj: ParkObj): { [region: string]: string[] } {
+  const parksByRegion: { [region: string]: string[] } = {};
+
+  for (const park in parkObj) {
+    const region = parkObj[park].region;
+    if (!parksByRegion[region]) {
+      parksByRegion[region] = [];
+    }
+    parksByRegion[region].push(park);
+  }
+
+  // Optional: sort parks alphabetically in each region
+  for (const region in parksByRegion) {
+    parksByRegion[region].sort();
+  }
+
+  return parksByRegion;
+}
 
 const LocalTimePicker: React.FC<{
   time: string;
