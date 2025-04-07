@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
           ? ratingConfig["UVI"].find(
               (item) =>
                 item.range &&
-                uvi &&
+                (uvi || uvi == 0) &&
                 uvi >= item.range.min &&
                 uvi <= item.range.max
             )
@@ -105,7 +105,10 @@ export async function POST(req: NextRequest) {
 
         const psiConfig = ratingConfig["PSI"].find(
           (item) =>
-            item.range && psi && psi >= item.range.min && psi <= item.range.max
+            item.range &&
+            (psi || psi == 0) &&
+            psi >= item.range.min &&
+            psi <= item.range.max
         );
 
         const forecastConfig = ratingConfig["WEATHER FORECAST"].find(

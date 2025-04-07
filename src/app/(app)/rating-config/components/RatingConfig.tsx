@@ -48,8 +48,7 @@ export const RatingConfig: React.FC = () => {
   };
 
   const handleResetToDefault = () => {
-    console.log("reset");
-    setUserConfigData(RatingConfigObj);
+    setUserConfigData(JSON.parse(JSON.stringify(RatingConfigObj))); // Use JSON for deep copy
     if (typeof window !== "undefined") {
       localStorage.setItem("ratingConfigData", JSON.stringify(RatingConfigObj));
     }

@@ -1,7 +1,9 @@
 {
   "name": "SG Park Environmental Monitoring System",
-  "short_name": "PEM",
+  "short_name": "SG Parks",
   "start_url": "/",
+  "scope": "/",
+  "description": "Monitor environmental conditions in SG parks efficiently.",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000"

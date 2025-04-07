@@ -1,8 +1,7 @@
 /** @format */
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
-import { Switch } from "@/components/ui/switch";
-import NotificationDialog from "./NotificationDialog";
-import { Plus } from "lucide-react";
 import { RatingConfigObj } from "@/lib/ratingConfig";
 
 type Notification = {
@@ -12,11 +11,6 @@ type Notification = {
   date: string[];
   enabled: boolean;
 };
-
-interface Item {
-  name: string;
-  id: number;
-}
 
 interface ParkForecast {
   uvi: { value: number | null; color: string } | null;
@@ -33,15 +27,10 @@ function urlBase64ToUint8Array(base64String: string) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-const NotificationConfig = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const NotificationTimer = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [selectedNotification, setSelectedNotification] =
-    useState<Notification | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const [ratingConfigData, setRatingConfigData] = useState<{
-    [key: string]: ParkForecast;
-  }>({});
+
   const subscriptionRef = useRef<PushSubscription | null>(null);
 
   // retrieve localstorage ratingConfigData
@@ -110,6 +99,7 @@ const NotificationConfig = () => {
   useEffect(() => {
     // Timer to check for matching notifications
     const timer = setInterval(() => {
+      console.log(timer, "timer");
       const now = new Date();
       now.setSeconds(now.getSeconds() + 30); // Add 30 seconds to the current time
       const currentTime = now.toLocaleTimeString("en-US", {
@@ -151,8 +141,6 @@ const NotificationConfig = () => {
             };
 
             postData().then((data) => {
-              setRatingConfigData(data);
-
               const parkData = data[notification.park];
               sendNotification(notification, parkData);
             });
@@ -187,76 +175,7 @@ const NotificationConfig = () => {
     }
   };
 
-  const toggleSwitch = (index: number) => {
-    const newNotifications = [...notifications];
-    newNotifications[index].enabled = !newNotifications[index].enabled;
-    setNotifications(newNotifications);
-  };
-
-  const openDialog = (notification: Notification | null) => {
-    setSelectedNotification(notification);
-    setIsDialogOpen(true);
-  };
-
-  const closeDialog = () => {
-    setSelectedNotification(null);
-    setIsDialogOpen(false);
-  };
-
-  const displayDate = (date: string[]) => {
-    return date.join(", ");
-  };
-
-  if (!isClient) {
-    // Prevent rendering until client-side
-    return null;
-  }
-
-  return (
-    <div>
-      <button
-        onClick={() => {
-          openDialog(null);
-        }}
-        className="fixed bottom-24 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg"
-      >
-        <Plus size={24} />
-      </button>
-
-      {notifications.map((notification, index) => (
-        <div key={index}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "10px",
-            }}
-          >
-            <div onClick={() => openDialog(notification)} className="w-full">
-              <p className="text-4xl font-semibold">{notification.time}</p>
-              <p>
-                {notification.park}
-                {notification.date.length > 0 ? "," : ""}{" "}
-                {displayDate(notification.date)}
-              </p>
-            </div>
-            <Switch
-              checked={notification.enabled}
-              onCheckedChange={() => toggleSwitch(index)}
-            />
-          </div>
-          <hr />
-        </div>
-      ))}
-      <NotificationDialog
-        notification={selectedNotification}
-        setNotifications={setNotifications}
-        onClose={closeDialog}
-        isOpen={isDialogOpen}
-      />
-    </div>
-  );
+  return <></>;
 };
 
-export default NotificationConfig;
+export default NotificationTimer;

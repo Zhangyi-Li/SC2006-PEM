@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState } from "react";
+import React, { useState, useEffect, use } from "react";
 
 import {
   Dialog,
@@ -32,6 +32,7 @@ type ParkObj = {
 };
 
 type Notification = {
+  id: number;
   time: string;
   park: string;
   date: string[];
@@ -39,7 +40,8 @@ type Notification = {
 };
 
 type NotificationDialogProps = {
-  notification: Notification;
+  notification: Notification | null;
+  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
   onClose: () => void;
   isOpen: boolean;
 };
@@ -85,20 +87,117 @@ const LocalTimePicker: React.FC<{
 
 const NotificationDialog: React.FC<NotificationDialogProps> = ({
   notification,
+  setNotifications,
   onClose,
   isOpen,
 }) => {
-  const [selectedDays, setSelectedDays] = useState<string[]>(
-    notification.date ? notification.date : []
-  );
-  const [time, setTime] = useState(notification.time);
-  const [selectedPark, setSelectedPark] = useState(notification.park);
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [time, setTime] = useState("00:00");
+  const [selectedPark, setSelectedPark] = useState("");
 
   const toggleDay = (day: string) => {
-    setSelectedDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-    );
+    const daysOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const isSelected = selectedDays.includes(day);
+    const newSelectedDays = isSelected
+      ? selectedDays.filter((d) => d !== day)
+      : [...selectedDays, day];
+    newSelectedDays.sort((a, b) => {
+      return daysOrder.indexOf(a) - daysOrder.indexOf(b);
+    });
+    setSelectedDays(newSelectedDays);
   };
+
+  const closeDialog = () => {
+    setSelectedDays([]);
+    setTime("00:00");
+    setSelectedPark("");
+    onClose();
+  };
+
+  const handleSaveNotification = () => {
+    if (!selectedPark) {
+      alert("Please select a park.");
+      return;
+    }
+    if (!time) {
+      alert("Please select the time.");
+      return;
+    }
+
+    const newNotification: Notification = {
+      id: notification ? notification.id : Date.now(),
+      time: time,
+      park: selectedPark,
+      date: selectedDays,
+      enabled: true,
+    };
+
+    // set notification in order of time and if id exists, update it
+    if (notification) {
+      setNotifications((prev) => {
+        const updatedNotifications = prev.map((n) =>
+          n.id === notification.id ? newNotification : n
+        );
+        updatedNotifications.sort((a, b) => {
+          return a.time.localeCompare(b.time);
+        });
+        localStorage.setItem(
+          "notificationList",
+          JSON.stringify(updatedNotifications)
+        );
+        return updatedNotifications;
+      });
+      closeDialog();
+      return;
+    } else {
+      // if id does not exist, add it to the list
+      setNotifications((prev) => {
+        const updatedNotifications = [...prev, newNotification];
+        updatedNotifications.sort((a, b) => {
+          return a.time.localeCompare(b.time);
+        });
+        localStorage.setItem(
+          "notificationList",
+          JSON.stringify(updatedNotifications)
+        );
+        return updatedNotifications;
+      });
+    }
+
+    closeDialog();
+  };
+
+  const handleDeleteNotification = (id: number) => {
+    setNotifications((prev) => {
+      const updatedNotifications = prev.filter((n) => n.id !== id);
+      localStorage.setItem(
+        "notificationList",
+        JSON.stringify(updatedNotifications)
+      );
+      return updatedNotifications;
+    });
+    closeDialog();
+  };
+
+  useEffect(() => {
+    console.log("isOpen", isOpen);
+    if (isOpen && notification) {
+      setTime(notification?.time ?? getCurrentTime());
+      setSelectedDays(notification?.date ?? []);
+      setSelectedPark(notification?.park ?? "");
+    } else if (isOpen) {
+      setTime(getCurrentTime());
+    }
+  }, [isOpen, notification]);
 
   return (
     <div>
@@ -164,10 +263,24 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
                 </SelectContent>
               </Select>
             </div>
-
-            <Button onClick={onClose} variant="outline" className="mt-4">
+            <Button
+              onClick={handleSaveNotification}
+              variant="outline"
+              className="mt-4 text-green-500 "
+            >
               Save
             </Button>
+            {notification && (
+              <Button
+                variant="outline"
+                className="text-red-500 "
+                onClick={() => {
+                  handleDeleteNotification(notification.id);
+                }}
+              >
+                Delete Notification
+              </Button>
+            )}
           </div>
         </DialogContent>
         <DialogFooter></DialogFooter>

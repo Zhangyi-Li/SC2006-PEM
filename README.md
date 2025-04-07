@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a **Next.js** web application developed as part of the **NTU SC2006** course project. The application provides real-time monitoring of environmental conditions in Singapore's public parks, offering insights into air quality, temperature, humidity, and other key factors.
+This is a **Next.js** web application developed as part of the **NTU SC2006** course project. The application provides real-time monitoring of environmental conditions in Singapore's public parks, offering insights into PSI, UVI, and Weather forecast of various parks.
 
 ## Features
 

@@ -86,10 +86,10 @@ export const Display = () => {
       setRatingConfigData(data);
 
       if (!localParkList || JSON.parse(localParkList).length === 0) {
-        toast("No park selected", {
-          className: cn(""),
-          description: "Please add a park via the plus button",
-        });
+        // toast("No park selected", {
+        //   className: cn(""),
+        //   description: "Please add a park via the plus button",
+        // });
       }
 
       if (localParkList) {
@@ -133,9 +133,9 @@ export const Display = () => {
       }
 
       if (!parkList || parkList.length === 0) {
-        toast("No park selected", {
-          description: "Please add a park via the plus button",
-        });
+        // toast("No park selected", {
+        //   description: "Please add a park via the plus button",
+        // });
       }
     }
   }, [parkList, isDialogOpen]);
@@ -158,6 +158,11 @@ export const Display = () => {
           id: index + 1, // Reassign row_id based on index
         }));
         setItems(updateItems); // Set the updated items with new ids
+
+        // Update local storage
+        if (typeof window !== "undefined") {
+          localStorage.setItem("parkList", JSON.stringify(updateItems));
+        }
       }
     }
     setActiveId(null); // Reset active ID after drag ends
@@ -165,6 +170,14 @@ export const Display = () => {
 
   function handleDelete(idToDelete: number) {
     setItems((prevItems) => prevItems.filter((item) => item.id !== idToDelete));
+
+    // Update local storage
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "parkList",
+        JSON.stringify(items.filter((item) => item.id !== idToDelete))
+      );
+    }
   }
 
   return (

@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
 import ParkMarkers from "./components/ParkMarkers";
+import NotificationTimer from "@/components/NotificationTimer";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -35,6 +36,7 @@ const MapPage = () => {
         />
         <ParkMarkers />
       </MapContainer>
+      <NotificationTimer />
     </>
   );
 };
