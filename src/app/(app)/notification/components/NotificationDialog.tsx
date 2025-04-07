@@ -37,6 +37,7 @@ type Notification = {
   park: string;
   date: string[];
   enabled: boolean;
+  called: boolean; // New property to track if the notification has been called
 };
 
 type NotificationDialogProps = {
@@ -139,6 +140,7 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
       park: selectedPark,
       date: selectedDays,
       enabled: true,
+      called: false, // Initialize called to true when creating a new notification
     };
 
     // set notification in order of time and if id exists, update it

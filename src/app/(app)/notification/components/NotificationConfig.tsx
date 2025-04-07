@@ -11,12 +11,8 @@ type Notification = {
   park: string;
   date: string[];
   enabled: boolean;
+  called: boolean; // New property to track if the notification has been called
 };
-
-interface Item {
-  name: string;
-  id: number;
-}
 
 interface ParkForecast {
   uvi: { value: number | null; color: string } | null;
@@ -39,9 +35,7 @@ const NotificationConfig = () => {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const [ratingConfigData, setRatingConfigData] = useState<{
-    [key: string]: ParkForecast;
-  }>({});
+
   const subscriptionRef = useRef<PushSubscription | null>(null);
 
   // retrieve localstorage ratingConfigData
@@ -62,7 +56,26 @@ const NotificationConfig = () => {
     const setup = async () => {
       if ("serviceWorker" in navigator && "PushManager" in window) {
         try {
-          console.log("Registering service worker...");
+          console.log("Checking for existing service worker registration...");
+          const existingRegistration =
+            await navigator.serviceWorker.getRegistration();
+          if (existingRegistration) {
+            console.log(
+              "Service worker already registered:",
+              existingRegistration
+            );
+            subscriptionRef.current =
+              await existingRegistration.pushManager.getSubscription();
+            if (subscriptionRef.current) {
+              console.log(
+                "Existing push subscription found:",
+                subscriptionRef.current
+              );
+              return;
+            }
+          }
+
+          console.log("Registering new service worker...");
           const registration = await navigator.serviceWorker.register("/sw.js");
           console.log("Service worker registered:", registration);
 
@@ -111,7 +124,7 @@ const NotificationConfig = () => {
     // Timer to check for matching notifications
     const timer = setInterval(() => {
       const now = new Date();
-      now.setSeconds(now.getSeconds() + 30); // Add 30 seconds to the current time
+      now.setSeconds(now.getSeconds() + 15); // Add 15 seconds to the current time
       const currentTime = now.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
@@ -124,8 +137,12 @@ const NotificationConfig = () => {
       });
       const dayOfWeekAbbr = dayOfWeek.substring(0, 3); //.toLowerCase(); // Get the first three letters of the day
 
-      notifications.forEach((notification) => {
-        if (notification.enabled && notification.time === currentTime) {
+      notifications.forEach((notification, index) => {
+        if (
+          notification.enabled &&
+          notification.time === currentTime &&
+          !notification.called
+        ) {
           if (
             notification.date.length === 0 ||
             notification.date.includes(dayOfWeekAbbr)
@@ -151,15 +168,27 @@ const NotificationConfig = () => {
             };
 
             postData().then((data) => {
-              setRatingConfigData(data);
-
               const parkData = data[notification.park];
-              sendNotification(notification, parkData);
+              sendNotification(notification, parkData).then(() => {
+                // Update the notification state to called
+                const updatedNotifications = [...notifications];
+                updatedNotifications[index] = {
+                  ...notification,
+                  called: true, // Mark as called
+                };
+                setNotifications(updatedNotifications);
+
+                localStorage.setItem(
+                  "notificationList",
+                  JSON.stringify(updatedNotifications)
+                );
+                console.log("Updated notifications:", updatedNotifications);
+              });
             });
           }
         }
       });
-    }, 50000); // Check every minute
+    }, 5000); // Check every 5 sec
 
     return () => clearInterval(timer); // Cleanup on component unmount
   }, [notifications]);
